@@ -3,5 +3,11 @@ html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='https://unpkg.com/tachyons@4.7.0/css/tachyons.min.css')
   body
     block content
+    script(type='text/javascript')
+      | var CONFIG = {"CSDK_CLIENT_ID": "#{clientId}"}
+
+    script(type='text/javascript' src='https://cdn-creativesdk.adobe.io/v1/csdk.js')
+    script(type='text/javascript' src='/javascripts/index.js')
