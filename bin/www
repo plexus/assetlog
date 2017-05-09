@@ -4,9 +4,7 @@
 const USE_HTTPS = false
 
 // Module dependencies
-var app = require('../app')
-var http = require('http')
-var https = require('https')
+var app = require('../lib/app')
 var fs = require('fs')
 
 // Get port from environment and store in Express
@@ -24,9 +22,9 @@ if (USE_HTTPS) {
     rejectUnauthorized: false
   }
 
-  server = https.createServer(options, app)
+  server = require('https').createServer(options, app)
 } else {
-  server = http.createServer(app)
+  server = require('http').createServer(app)
 }
 
 // Listen on provided port, on all network interfaces

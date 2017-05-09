@@ -1,0 +1,15 @@
+extends layout
+
+block content
+  if events.length === 0
+    .tc
+      button#createWebhookButton Start tracking Creative Cloud Assets
+  else
+    table
+      tbody
+        for event in events
+          tr
+            td= event.createdAt
+            td= event.message
+  script(type='text/javascript') var ADOBE_API_KEY = "#{clientId}"
+  script(type='text/javascript' src='/javascripts/events.js')

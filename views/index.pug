@@ -1,6 +1,10 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
-  button#csdk-login Authorize Events
+  .tc
+    h1 Welcome to Assetlog
+    p This application demonstrates the use of Adobe I/O Events Webhooks. Login with your Adobe ID to start tracking any changes to your Adobe Creative Cloud Assets.
+    button#csdk-login Login with Adobe ID
+
+  script(type='text/javascript') var ADOBE_API_KEY = "#{clientId}"
+  script(type='text/javascript' src='/javascripts/index.js')

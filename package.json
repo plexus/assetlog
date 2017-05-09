@@ -13,8 +13,8 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.17.1",
-    "cookie-parser": "^1.4.3",
     "express": "^4.15.2",
+    "express-session": "^1.15.2",
     "foreman": "^2.0.0",
     "morgan": "^1.8.1",
     "pg": "^6.1.5",

@@ -2,12 +2,15 @@ doctype html
 html
   head
     title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='stylesheet', href='https://unpkg.com/tachyons@4.7.0/css/tachyons.min.css')
-  body
-    block content
-    script(type='text/javascript')
-      | var CONFIG = {"CSDK_CLIENT_ID": "#{clientId}"}
-
+    script(src='https://code.jquery.com/jquery-3.2.1.min.js' integrity='sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=' crossorigin='anonymous')
     script(type='text/javascript' src='https://cdn-creativesdk.adobe.io/v1/csdk.js')
-    script(type='text/javascript' src='/javascripts/index.js')
+
+  body
+    #header.bg-black.white-80
+      .center.mw7.w-90.pv3.relative
+        h1.mv0.w-70 Assetlog
+
+    #container.pa3.bg-white
+      .center.mw7.w-90.pv3
+        block content

@@ -1,10 +1,8 @@
-var csdkLoginBtn = document.getElementById('csdk-login')
-csdkLoginBtn.addEventListener('click', handleCsdkLogin, false)
+/* globals AdobeCreativeSDK: false, $: false, ADOBE_API_KEY: false */
 
-var access_token = ''
-
+// Initalize the Creative SDK
 AdobeCreativeSDK.init({
-  clientID: CONFIG.CSDK_CLIENT_ID,
+  clientID: ADOBE_API_KEY,
   onError: function (error) {
     if (error.type === AdobeCreativeSDK.ErrorTypes.AUTHENTICATION) {
       console.log('You must be logged in to use the Creative SDK')
@@ -16,14 +14,41 @@ AdobeCreativeSDK.init({
   }
 })
 
+// If the user has already granted the app access, and is currently logged in,
+// then we get an access token back that can be used to do API calls and install
+// webhooks.
+//
+// If that's the case then send that token to the server to be validated and
+// stored in the session, and then redirect to the events page.
+function handleAuthorized (csdkAuth) {
+  $.post('/authenticate', csdkAuth.accessToken, function () {
+    window.location.pathname = '/events'
+  }).fail(function () {
+    console.log('Failed to validate access token.')
+  })
+}
+
+// Check the user's authorization status. If they aren't logged in then pop up a
+// log in screen. After logging in and granting authorizing to the app, the
+// login window closes, and we check the user's authorization status again.
 function handleCsdkLogin () {
   AdobeCreativeSDK.getAuthStatus(function (csdkAuth) {
     if (csdkAuth.isAuthorized) {
-      access_token = csdkAuth.accessToken
-      csdkLoginBtn.disabled = true
-      csdkLoginBtn.value = 'Authorized'
+      handleAuthorized(csdkAuth)
     } else {
       AdobeCreativeSDK.login(handleCsdkLogin)
     }
   })
 }
+
+// Do a first check on page load, since the user might already be logged in.
+AdobeCreativeSDK.getAuthStatus(function (csdkAuth) {
+  if (csdkAuth.isAuthorized) {
+    handleAuthorized(csdkAuth)
+  }
+})
+
+// Attach a handler to the login button that checks the authorization status and
+// either redirects to the events page, or pops up a login window.
+var csdkLoginBtn = document.getElementById('csdk-login')
+csdkLoginBtn.addEventListener('click', handleCsdkLogin, false)
