@@ -3,8 +3,6 @@ html
   head
     title= title
     link(rel='stylesheet', href='https://unpkg.com/tachyons@4.7.0/css/tachyons.min.css')
-    script(src='https://code.jquery.com/jquery-3.2.1.min.js' integrity='sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=' crossorigin='anonymous')
-    script(type='text/javascript' src='https://cdn-creativesdk.adobe.io/v1/csdk.js')
 
   body
     #header.bg-black.white-80
@@ -14,3 +12,7 @@ html
     #container.pa3.bg-white
       .center.mw7.w-90.pv3
         block content
+
+    script(src='https://code.jquery.com/jquery-3.2.1.min.js' integrity='sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=' crossorigin='anonymous')
+    script(type='text/javascript' src='https://cdn-creativesdk.adobe.io/v1/csdk.js')
+    block scripts

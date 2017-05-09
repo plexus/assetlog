@@ -41,14 +41,16 @@ function handleCsdkLogin () {
   })
 }
 
+// Attach a handler to the login button that checks the authorization status and
+// either redirects to the events page, or pops up a login window.
+$('#csdk-login').on('click', handleCsdkLogin)
+
 // Do a first check on page load, since the user might already be logged in.
 AdobeCreativeSDK.getAuthStatus(function (csdkAuth) {
   if (csdkAuth.isAuthorized) {
     handleAuthorized(csdkAuth)
+  } else {
+    $('#spinner').hide()
+    $('#csdk-login').show()
   }
 })
-
-// Attach a handler to the login button that checks the authorization status and
-// either redirects to the events page, or pops up a login window.
-var csdkLoginBtn = document.getElementById('csdk-login')
-csdkLoginBtn.addEventListener('click', handleCsdkLogin, false)

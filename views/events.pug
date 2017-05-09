@@ -11,5 +11,7 @@ block content
           tr
             td= event.createdAt
             td= event.message
+
+block scripts
   script(type='text/javascript') var ADOBE_API_KEY = "#{clientId}"
   script(type='text/javascript' src='/javascripts/events.js')

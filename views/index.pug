@@ -4,7 +4,9 @@ block content
   .tc
     h1 Welcome to Assetlog
     p This application demonstrates the use of Adobe I/O Events Webhooks. Login with your Adobe ID to start tracking any changes to your Adobe Creative Cloud Assets.
-    button#csdk-login Login with Adobe ID
+    img#spinner.center(src='/images/spinner.svg')
+    button#csdk-login.dn Login with Adobe ID
 
+block scripts
   script(type='text/javascript') var ADOBE_API_KEY = "#{clientId}"
   script(type='text/javascript' src='/javascripts/index.js')
