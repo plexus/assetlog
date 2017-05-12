@@ -32,7 +32,7 @@ git push heroku master
 heroku run npm run migrate
 ```
 
-- Now you need to set the necessary environment variables, these are the ones that are listed in the `.env` file. You can do this one, e.g.
+- Now you need to set the necessary environment variables, these are the ones that are listed in the `.env` file. You can do this either one by one, e.g.
 
 ```
 heroku config:set ADOBE_APPLICATION_ID=123
@@ -45,6 +45,8 @@ heroku plugins:install heroku-config
 heroku config:push
 ```
 
-Verify that they're all there with `heroku config`. This will *not* override any environment variables provided by Heroku like `DATABASE_URL`, so it's a safe operation.
+This will *not* override any environment variables provided by Heroku like `DATABASE_URL`, so you don't end up accidentally changing those.
+
+Verify that they're all there with `heroku config`. Make sure `HOSTNAME` is the domain name of your heroku app.
 
 - Now your app should be up and running. `heroku open` will open it in the browser, with `heroku logs -t` you can follow the server logs.
