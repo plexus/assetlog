@@ -4,6 +4,50 @@ Keep a log of changes happening on your Adobe Creative Cloud Assets storage.
 
 Sample application for using webhooks.
 
+### Running the app
+
+To run the app, copy `.env.sample` to `.env`, and fill in the blanks. You'll find comments in that file that explain which values you need.
+
+Make sure you have a reasonably up to date Node.js, since the app uses ES6 syntax.
+
+Install the necessary dependencies
+
+```
+npm install
+```
+
+And run the app
+
+```
+npm start
+```
+
+This will start the app on port 5000 (or whatever value is set for `PORT` in `.env`), so you can browse to it at [http://localhost:5000](http://localhost:5000). Note that for the Adobe Auth UI to work correctly you need to be running on https (so with SSL encryption), and to actually receive webhooks the app needs to be accessible from the open internet. You can achieve both easily with [Ngrok](https://ngrok.com/).
+
+```
+ngrok http 5000
+```
+
+This command will set up a public domain, and forward all traffic that it receives to your app running locally. Look for these lines in the output to find the domain name.
+
+```
+Forwarding                    http://393532bc.ngrok.io -> localhost:3000
+Forwarding                    https://393532bc.ngrok.io -> localhost:3000
+```
+
+You need to configure this as the `HOSTNAME` in `.env`. The app needs to know its own location, so that it can correctly register webhooks.
+
+```
+HOSTNAME=393532bc.ngrok.io
+```
+
+You also need this domain name to configure your [integration's Redirect URI](https://console.adobe.io/integrations). This is necessary for authentication to work.
+
+* Redirect URI: `https://393532bc.ngrok.io`
+* Redirect URI pattern: `https://393532bc\\.ngrok\\.io/.*`
+
+The redirect URI pattern is a regular expression, which has to match at least `https://yourdomain/redirectims.html`. If you find you're not being redirected back properly after authentication, then make sure this pattern is correct or set Redirect URI to `https://yourdomain/redirectims.html`.
+
 ### Heroku
 
 Deploying to heroku
