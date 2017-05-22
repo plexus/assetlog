@@ -4,6 +4,17 @@ Keep a log of changes happening on your Adobe Creative Cloud Assets storage.
 
 Sample application for using webhooks.
 
+### Creating an integration
+
+Your first step is to create a new integration in the [Adobe I/O Console](https://console.adobe.io/integrations).
+
+- Step 1, "Access an API"
+- Step 2, "Creative SDK"
+- Step 3, "New Integration"
+- Step 4, Choose a name, description, and configure the callback url (you need to know your hostname for this, see below for instructions using either Ngrok or Heroku)
+
+Once your integration is created, go into "Events", and add the "Creative Cloud Assets" event provider.
+
 ### Running the app
 
 To run the app, copy `.env.sample` to `.env`, and fill in the blanks. You'll find comments in that file that explain which values you need.
@@ -14,6 +25,12 @@ Install the necessary dependencies
 
 ```
 npm install
+```
+
+Run the migrations, so the database tables are created
+
+```
+npm run migrate
 ```
 
 And run the app
