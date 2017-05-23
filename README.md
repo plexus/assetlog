@@ -1,17 +1,83 @@
-## Assetlog
+# Assetlog
 
 Keep a log of changes happening on your Adobe Creative Cloud Assets storage.
 
-Sample application for using webhooks.
+Sample application for using Adobe Events webhooks.
 
-### Creating an integration
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-Your first step is to create a new integration in the [Adobe I/O Console](https://console.adobe.io/integrations).
+- [Introduction](#introduction)
+- [Prerequisites](#prerequisites)
+- [Setting up the application locally](#setting-up-the-application-locally)
+  - [Start ngrok](#start-ngrok)
+  - [Create the integration](#create-the-integration)
+  - [Running the app](#running-the-app)
+  - [Heroku](#heroku)
 
-- Step 1, "Access an API"
-- Step 2, "Creative SDK"
-- Step 3, "New Integration"
-- Step 4, Choose a name, description, and configure the callback url (you need to know your hostname for this, see below for instructions using either Ngrok or Heroku)
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## Introduction
+
+This is a sample application written in Node.js using the Express web framework. It demonstrates how to use the [Adobe Creative SDK](https://creativesdk.adobe.com/) to [perform authentication](https://creativesdk.adobe.com/docs/web/#/articles/userauthui/index.html), how to programmatically register webhooks to receive events from [Adobe Creative Cloud Assets](https://assets.adobe.com), and how to verify and handle these incoming webhook events.
+
+You can try it out at [https://assetlog.herokuapp.com](https://assetlog.herokuapp.com).
+
+## Prerequisites
+
+You need an Adobe ID, and access to the Adobe I/O Events Beta program ([request form](https://adobeio.typeform.com/to/QvEgPP)).
+
+You need to [Node.js](http://nodejs.org/) installed, version 6.0.0 or later, and [npm](http://npmjs.com/).
+
+To be able to use the Adobe Creative SDK for authentication, and to be able to receive inbound webhook calls, your application needs to be accessible from the open internet (have a public domain name), and use SSL encryption (HTTPS). An easy way to make your local development machine publicly accesible over HTTPS is with [Ngrok](http://ngrok.io/).
+
+Alternatively you can run the app on a hosting service that takes care of these aspects. This document describes how to deploy the app to [Heroku](http://heroku.com/).
+
+## Setting up the application locally
+
+### Start ngrok
+
+Ngrok is a tool that creates a public domain name, and then forwards all HTTP and HTTPS traffic from that domain to a port on your local machine. That way you can run a web application locally, but make it accessible to the outside word.
+
+Do this step first, because you will need to know your public domain name for the next step. Avoid restarting ngrok, because each time you do it will assign you a different domain name, so use a separate terminal window where you can leave ngrok running in the background.
+
+```
+ngrok http 3000
+```
+
+Make a note of the address you have been assigned. You will need this in the next step, for instance:
+
+```
+Forwarding     http://393732bc.ngrok.io -> localhost:3000
+Forwarding     https://393732bc.ngrok.io -> localhost:3000
+```
+
+### Create the integration
+
+Open the [Adobe I/O Console Integrations Page](https://console.adobe.io/integrations), and click on "New Integration"
+
+![](img/new_integration_step_1.png)
+
+Choose "Access an API", and click on "Continue"
+
+![](img/new_integration_step_2.png)
+
+Choose "Creative SDK", click "Continue"
+
+![](img/new_integration_step_3.png)
+
+Choose "New Integration", click "Continue"
+
+![](img/new_integration_step_4.png)
+
+Give your application a name and description. For the callback url, fill in the HTTPS url you got from Ngrok. For the URI pattern, use the same value, but escape the periods in the domain name wit a slash, and add `.*` at the end. This is a regular expression, it must match `https://yourdomain.com/redirectims.html` for the application to work correctly.
+
+![](img/new_integration_step_5.png)
+
+You application has been created, click "Continue to Integration Details"
+
+----
 
 Once your integration is created, go into "Events", and add the "Creative Cloud Assets" event provider.
 
