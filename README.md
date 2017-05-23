@@ -6,15 +6,21 @@ Sample application for using Adobe Events webhooks.
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+**Table of Contents**
 
 - [Introduction](#introduction)
 - [Prerequisites](#prerequisites)
 - [Setting up the application locally](#setting-up-the-application-locally)
   - [Start ngrok](#start-ngrok)
   - [Create the integration](#create-the-integration)
-  - [Running the app](#running-the-app)
-  - [Heroku](#heroku)
+  - [Configure the app](#configure-the-app)
+  - [Run the app](#run-the-app)
+- [Deploying the application to Heroku](#deploying-the-application-to-heroku)
+  - [Prerequisites](#prerequisites-1)
+  - [Creating the app and deploying](#creating-the-app-and-deploying)
+- [Walkthrough](#walkthrough)
+  - [Sequence diagram](#sequence-diagram)
+  - [Code overview](#code-overview)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -203,4 +209,65 @@ Now your app should be up and running. `heroku open` will open it in the browser
 
 ## Walkthrough
 
-![](img/interaction_diagram.svg)
+### Sequence diagram
+
+Here's a detailed overview of what happens when a user visits the app, authenticates, and sets up a webhook.
+
+![](https://rawgit.com/plexus/assetlog/master/img/interaction_diagram.svg)
+
+### Code overview
+
+```
+.
+├── package.json             # description of the npm package
+├── Procfile                 # used by Foreman to start the app
+├── bin
+│   ├── migrate              # run DB migrations, used by `npm run migrate`
+│   └── www                  # start the app, don't run this directly, use `npm start`
+├── lib
+│   ├── app.js               # top level application code
+│   ├── database.js          # database configuration
+│   ├── event.js             # the Event database model
+│   ├── adobe_api.js         # wrapper for some Adobe API calls
+│   ├── main_routes.js       # the public facing routes, return HTML
+│   ├── api_routes.js        # routes called with AJAX, return JSON
+│   └── webhook_routes.js    # the webhook routes, called by Adobe I/O events
+├── public
+│   └── javascripts
+│       ├── index.js         # Frontend JS code, included with the index page
+│       └── events.js        # Frontend JS code, included with the events page
+└── views
+    ├── layout.pug           # layout templated, shared by all views
+    ├── index.pug            # the template served at http://your-app.com/
+    ├── events.pug           # the template served at http://your-app.com/events
+    └── redirect_ims.pug     # provided by Adobe, part of the authentication flow
+```
+
+The application responds to these types of requests
+
+```
+main_routes.js:
+  GET /
+  GET /events
+  GET /redirectims.html
+```
+
+These are the pages that are directly visited from the browser, these routes return HTML plus some included JavaScript which takes care of communicating with the Adobe Creative SDK (for authentication), and with the application's API defined in `api_routes.js`.
+
+```
+api_routes.js:
+  POST /authenticate
+  POST /create_webhook
+```
+
+Once the authentication flow on the frontend has finished, the frontend uses the `/authenticate` API call to notify the backend that the user is now authenticated, and to share the Auth Token with the backend.
+
+Subsequently the frontend can instruct the backend to create a new webhook with `/create_webhook`, which uses the Auth Token when calling out to Adobe I/O Events webhook API.
+
+```
+webhook_routes.js
+  GET /webhook?challenge=...
+  POST /webhook
+```
+
+Once the webhook has been set up, the application will start receiving calls on this endpoint, which are stored in the database and displayed on the `/events` page.
